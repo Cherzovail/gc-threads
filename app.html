@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GC Threads</title>
+  <link rel="stylesheet" href="../Back/style.css" />
+</head>
+<body>
+  <div id="mainApp" class="page active">
+    <div class="app-container">
+      <div class="mobile-frame">
+
+        <header id="appHeader" class="app-header">
+          <button id="homeLogoBtn" class="logo-circle-small" aria-label="Go to home">G</button>
+          <button id="notificationBtn" class="notification-btn" aria-label="Notifications">
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+              <path d="M18 8A6 6 0 006 8c0 7-3 9-3 9h18s-3-2-3-9"/>
+              <path d="M13.73 21a2 2 0 01-3.46 0"/>
+            </svg>
+            <span id="notificationBadge" class="notification-badge hidden" aria-live="polite">0</span>
+          </button>
+        </header>
+
+        <div class="pages-container">
+          <main id="homePage" class="app-page active">
+            <div class="page-header">
+              <div class="page-title-container">
+                <div class="page-icon gradient-teal" aria-hidden="true">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                  </svg>
+                </div>
+                <h2>Freedom Feed</h2>
+              </div>
+              <div class="search-bar">
+                <svg class="search-icon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <circle cx="11" cy="11" r="8"/>
+                  <path d="M21 21l-4.35-4.35"/>
+                </svg>
+                <input type="search" id="searchInput" placeholder="Search concerns, posts, topics…" aria-label="Search posts">
+              </div>
+            </div>
+            <div class="page-content" id="homePageContent"></div>
+          </main>
+
+          <section id="concernsPage" class="app-page">
+            <div class="page-header gradient-header">
+              <h2>Student Concerns</h2>
+              <div class="category-pills" id="categoryPills" role="tablist" aria-label="Filter by category">
+                <button class="pill active" data-category="All" role="tab" aria-selected="true">All</button>
+                <button class="pill" data-category="Academics" role="tab" aria-selected="false">Academics</button>
+                <button class="pill" data-category="Lost &amp; Found" role="tab" aria-selected="false">Lost &amp; Found</button>
+                <button class="pill" data-category="Events" role="tab" aria-selected="false">Events</button>
+                <button class="pill" data-category="General" role="tab" aria-selected="false">General</button>
+              </div>
+            </div>
+            <div class="stats-bar">
+              <div class="stats-info">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/>
+                  <polyline points="17 6 23 6 23 12"/>
+                </svg>
+                <span id="concernsCount">0 Total Concerns</span>
+              </div>
+              <button class="filter-btn" aria-label="Filter concerns">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <polygon points="22 3 2 3 10 12.46 10 19 14 21 14 12.46 22 3"/>
+                </svg>
+                <span>Filter</span>
+              </button>
+            </div>
+            <div class="page-content" id="concernsPageContent"></div>
+          </section>
+
+          <section id="postPage" class="app-page">
+            <div class="page-header gradient-header-orange" style="display:flex;align-items:center;justify-content:space-between;">
+              <button id="closePostBtn" class="icon-btn" type="button" aria-label="Close">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+              <h2>New Post</h2>
+              <button id="submitPostBtn" class="icon-btn" type="button" aria-label="Submit post">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <polyline points="20 6 9 17 4 12"/>
+                </svg>
+              </button>
+            </div>
+            <div class="page-content post-form-container">
+              <form id="postForm" novalidate>
+                <div class="form-group">
+                  <label for="postCategory">Category</label>
+                  <select id="postCategory" required aria-required="true">
+                    <option value="">Select a category</option>
+                    <option value="Academics">Academics</option>
+                    <option value="Lost &amp; Found">Lost &amp; Found</option>
+                    <option value="Events">Events</option>
+                    <option value="General">General</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label for="postTitle">Title</label>
+                  <input type="text" id="postTitle" placeholder="What's your concern?" required aria-required="true">
+                </div>
+                <div class="form-group">
+                  <label for="postContent">Description</label>
+                  <textarea id="postContent" placeholder="Describe your concern in detail…" rows="6" required aria-required="true"></textarea>
+                </div>
+                <div class="form-group">
+                  <label for="postLocation">Location</label>
+                  <input type="text" id="postLocation" placeholder="Add a location or campus area">
+                </div>
+                <div class="form-group">
+                  <label for="postAttachment">Attachment</label>
+                  <input type="file" id="postAttachment" accept="image/*,video/*,.pdf,.doc,.docx" aria-describedby="postAttachmentLabel">
+                  <p id="postAttachmentLabel" class="help-text" style="margin-top:.5rem;">No file selected</p>
+                </div>
+                <div id="postError" class="error-message hidden" role="alert"></div>
+              </form>
+            </div>
+          </section>
+
+          <section id="calendarPage" class="app-page">
+            <div class="page-header gradient-header-orange" style="display:flex;align-items:center;justify-content:space-between;">
+              <h2>Dates &amp; Events</h2>
+              <button id="viewFullCalendarBtn" class="view-full-btn" aria-label="View full calendar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <rect x="3" y="4" width="18" height="18" rx="2"/>
+                  <line x1="16" y1="2" x2="16" y2="6"/>
+                  <line x1="8" y1="2" x2="8" y2="6"/>
+                  <line x1="3" y1="10" x2="21" y2="10"/>
+                </svg>
+                <span>Full View</span>
+              </button>
+            </div>
+            <div class="calendar-container">
+              <div class="calendar-nav">
+                <button id="prevMonthBtn" class="nav-btn" aria-label="Previous month">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6"/>
+                  </svg>
+                </button>
+                <h3 id="currentMonthYear">May 2026</h3>
+                <button id="nextMonthBtn" class="nav-btn" aria-label="Next month">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="calendar-weekdays" aria-hidden="true">
+                <div>S</div><div>M</div><div>T</div><div>W</div><div>T</div><div>F</div><div>S</div>
+              </div>
+              <div class="calendar-grid" id="calendarGrid" role="grid" aria-label="Calendar"></div>
+            </div>
+            <div class="page-content">
+              <h3 class="section-title">Upcoming Events</h3>
+              <div id="eventsContainer"></div>
+            </div>
+          </section>
+
+          <section id="fullCalendarPage" class="app-page">
+            <div class="page-header gradient-header-orange" style="display:flex;align-items:center;justify-content:space-between;">
+              <button id="closeFullCalendarBtn" class="icon-btn" aria-label="Close full calendar">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                  <line x1="18" y1="6" x2="6" y2="18"/>
+                  <line x1="6" y1="6" x2="18" y2="18"/>
+                </svg>
+              </button>
+              <h2>Full Calendar</h2>
+            </div>
+            <div class="page-content">
+              <div class="calendar-nav">
+                <button id="prevMonthFullBtn" class="nav-btn" aria-label="Previous month">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <polyline points="15 18 9 12 15 6"/>
+                  </svg>
+                </button>
+                <h3 id="currentMonthYearFull">May 2026</h3>
+                <button id="nextMonthFullBtn" class="nav-btn" aria-label="Next month">
+                  <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+                    <polyline points="9 18 15 12 9 6"/>
+                  </svg>
+                </button>
+              </div>
+              <div class="calendar-weekdays-full" aria-hidden="true">
+                <div>Sun</div><div>Mon</div><div>Tue</div><div>Wed</div><div>Thu</div><div>Fri</div><div>Sat</div>
+              </div>
+              <div class="calendar-grid-full" id="calendarGridFull" role="grid" aria-label="Full calendar"></div>
+              <div id="selectedDayEvents" class="selected-day-events hidden">
+                <h3 class="section-title" id="selectedDayTitle"></h3>
+                <div id="selectedDayEventsContainer"></div>
+              </div>
+            </div>
+          </section>
+
+          <section id="profilePage" class="app-page">
+            <div class="page-header gradient-header-purple">
+              <h2>Profile</h2>
+            </div>
+            <div class="page-content" style="padding:0;">
+              <div class="profile-header">
+                <div class="profile-avatar" aria-hidden="true">
+                  <span id="profileAvatarText">G</span>
+                </div>
+                <h3 id="profileName">Guest User</h3>
+                <p id="profileEmail" class="profile-email"></p>
+              </div>
+              <div class="profile-stats">
+                <div class="stat-item">
+                  <span class="stat-value" id="userPostsCount">0</span>
+                  <span class="stat-label">Posts</span>
+                </div>
+                <div class="stat-item">
+                  <span class="stat-value" id="userLikesCount">0</span>
+                  <span class="stat-label">Likes Given</span>
+                </div>
+              </div>
+              <div class="profile-actions">
+                <button class="profile-btn" id="editProfileBtn" aria-label="Edit profile">Edit Profile</button>
+                <button class="profile-btn" id="logoutBtn" aria-label="Sign out">Sign Out</button>
+              </div>
+              <div class="profile-history">
+                <div class="profile-history-header">
+                  <h3>Post History</h3>
+                  <p class="profile-history-note">Manage and edit your previously created posts.</p>
+                </div>
+                <div id="userPostsHistory" class="post-list"></div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <nav class="bottom-nav" id="bottomNav" aria-label="Main navigation">
+          <button class="nav-item active" data-page="home" aria-label="Home" aria-current="page">Home</button>
+          <button class="nav-item" data-page="concerns" aria-label="Concerns">Concerns</button>
+          <button type="button" class="nav-item nav-item-center" data-page="post" aria-label="Create post">+</button>
+          <button class="nav-item" data-page="calendar" aria-label="Calendar">Calendar</button>
+          <button class="nav-item" data-page="profile" aria-label="Profile">Profile</button>
+        </nav>
+
+      </div>
+    </div>
+  </div>
+
+  <!-- Upload Modal -->
+  <div id="uploadModal" class="modal hidden" role="dialog" aria-labelledby="uploadModalTitle" aria-modal="true">
+    <div class="modal-overlay" id="modalOverlay"></div>
+    <div class="modal-content">
+      <div class="modal-header">
+        <h2 id="uploadModalTitle">Upload Attachment</h2>
+        <button id="closeUploadModal" class="modal-close-btn" type="button" aria-label="Close modal">
+          <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" aria-hidden="true">
+            <line x1="18" y1="6" x2="6" y2="18"/>
+            <line x1="6" y1="6" x2="18" y2="18"/>
+          </svg>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label for="uploadCategory">Category</label>
+          <select id="uploadCategory" required aria-required="true">
+            <option value="">Select a category</option>
+            <option value="Academics">Academics</option>
+            <option value="Lost &amp; Found">Lost &amp; Found</option>
+            <option value="Events">Events</option>
+            <option value="General">General</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label for="uploadFile">Choose File</label>
+          <input type="file" id="uploadFile" accept="image/*,video/*,.pdf,.doc,.docx" aria-describedby="uploadFileLabel">
+          <p id="uploadFileLabel" class="help-text" style="margin-top:.5rem;">No file selected</p>
+        </div>
+        <div id="uploadError" class="error-message hidden" role="alert"></div>
+      </div>
+      <div class="modal-footer">
+        <button id="cancelUploadBtn" class="btn-secondary" type="button">Cancel</button>
+        <button id="confirmUploadBtn" class="btn-primary" type="button">Upload</button>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../Back/app (1).js"></script>
+</body>
+</html>
+

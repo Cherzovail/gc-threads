@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>GC Threads — Set Username</title>
+  <link rel="stylesheet" href="../Back/style.css" />
+</head>
+<body>
+  <div id="usernameSetupPage" class="page active">
+    <div class="container">
+      <div class="login-card">
+        <div class="logo-container">
+          <div class="logo-circle">G</div>
+          <h1>Set your username</h1>
+          <p class="subtitle">This will appear on your posts</p>
+        </div>
+
+        <form id="usernameSetupForm">
+          <div class="form-group">
+            <label for="usernameInput">Username</label>
+            <div class="input-wrapper">
+              <input type="text" id="usernameInput" placeholder="e.g. juan_dela_cruz" autocomplete="username" />
+            </div>
+          </div>
+
+          <div id="usernameError" class="error-message hidden" role="alert"></div>
+
+          <button type="submit" class="btn btn-primary">
+            <span id="usernameButtonText">Continue</span>
+          </button>
+
+          <div class="text-center mt-4">
+            <button id="skipUsernameBtn" type="button" class="link-btn">Continue without Username</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="../Back/username-page.js"></script>
+</body>
+</html>
+
